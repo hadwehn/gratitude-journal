@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f6f2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gratitud">
+<title>El diario de la gratitud</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fffefa;--ink:#2b2a26;--mid:#716e66;--line:#e2dfd7;--surface:#eeede7;--night:#e7e8e3;--acc:#1e4d6b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:680px;margin:auto;padding:24px 20px calc(118px + env(safe-area-inset-bottom))}
+h1{font:500 30px/1.2 Georgia,serif;margin:0}h2{font:600 11px/1.45 system-ui;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin:0 0 12px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}button:disabled{opacity:.3;cursor:default}
+input,textarea{width:100%;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 2px;border-radius:0}
+textarea{border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical;line-height:1.6}input:focus,textarea:focus{border-color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}input:focus:not(:focus-visible),textarea:focus:not(:focus-visible){outline:0}
+select{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;min-height:44px;max-width:100%}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:32px 0 20px}.top>div{min-width:0}.sub{color:var(--mid);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+.card.intent{background:var(--surface)}.card.intent textarea{border:0;font:italic 20px/1.5 Georgia,serif;padding:0;min-height:64px}
+.card.night{background:var(--night);border-color:#d9dad3}.card.night .ln{border-bottom-color:#cfd0c8}
+.q{display:block;font-weight:600;font-size:14px;margin-bottom:8px}.ib{min-width:44px;min-height:44px;display:grid;place-items:center;border-radius:12px;font-size:22px}
+#dbt{position:fixed;top:8px;right:max(10px,calc(50% - 328px));z-index:5;color:var(--mid);background:var(--bg)}
+.seg{display:flex;gap:3px;background:var(--surface);border-radius:12px;padding:3px;margin-bottom:18px}.seg button{flex:1;min-width:0;min-height:44px;border-radius:9px;font-size:13px;color:var(--mid);display:flex;align-items:center;justify-content:center;gap:6px}.seg .on{background:var(--acc);color:white}
+.seg svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.seg .mark{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7;flex:none}
+.row{display:flex;align-items:flex-start;gap:10px;min-width:0}
+.num{width:18px;font:500 15px Georgia,serif;color:var(--mid);flex:none;padding-top:11px}
+.ln{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:10px 2px;resize:none;overflow:hidden;min-height:45px;line-height:1.5;display:block}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;border-radius:10px;background:var(--acc);color:white;font-size:15px;margin:8px 0;padding:10px 14px;text-align:center}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.quote{margin:0 0 24px;padding:4px 16px;border-left:1px solid var(--line);font:italic 17px/1.6 Georgia,serif;color:var(--mid)}.quote footer{font:12px/1.5 system-ui;margin-top:7px}
+.pause{text-align:center;font:italic 15px/1.5 Georgia,serif;color:var(--mid);margin:6px 0 22px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}.cd{aspect-ratio:1;min-height:40px;border-radius:10px;display:grid;place-items:center;font-size:15px;position:relative}.cd.today{border:1px solid var(--acc)}.cd.has{background:var(--surface)}.cd.sel,.cd.sel.has{background:var(--acc);color:white}
+.dts{position:absolute;bottom:4px;display:flex;gap:3px}.dts u{width:5px;height:5px;border-radius:50%;background:var(--acc)}.dts u.n{background:var(--mid)}.cd.sel .dts u{background:#fff}
+nav{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(94vw,460px);max-width:calc(100vw - 16px);display:flex;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 4px 18px #2b2a260a;z-index:5}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 0;border-radius:18px;color:var(--mid);font-size:11px;min-height:52px}nav button.on{background:var(--acc);color:white}nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sws{display:flex;gap:6px;flex-wrap:nowrap;width:fit-content;max-width:100%}.sw{flex:0 1 44px;width:44px;min-width:0;height:44px;border-radius:50%;border:4px solid var(--card);outline:1px solid var(--line)}.sw.on{outline:2px solid var(--acc);outline-offset:2px}
+dialog{border:1px solid var(--line);border-radius:18px;padding:0;width:min(94vw,520px);max-height:86dvh;overflow:auto;background:var(--card);color:var(--ink)}dialog::backdrop{background:#24231f50}.modal-head{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;background:var(--card);padding:12px 20px;border-bottom:1px solid var(--line);z-index:1}.modal-head h2{margin:0}.modal-body{padding:20px}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;font-size:14px}.tg span{flex:1}.tg input{width:22px;height:22px;flex:none;padding:0;border:0;accent-color:var(--acc)}.hr0{border:0;border-top:1px solid var(--line);margin:20px 0}
+.pref-title{margin-top:22px}.link{font-size:13px;color:var(--acc);text-decoration:underline;min-height:44px;cursor:pointer}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;font-size:14px}.setting span{flex:1}.setting input[type=date]{width:auto;border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:44px;background:var(--card)}
+.context{padding:12px 2px;color:var(--mid);font-size:14px}.context b{color:var(--ink)}.section-note{margin:0 0 20px;color:var(--mid);font-size:14px}.section-title{font:500 23px Georgia,serif;margin:24px 0 12px}
+.notice{display:flex;align-items:center;gap:8px;padding:10px 14px;margin-bottom:16px;background:var(--surface);border-radius:12px;font-size:13px;color:var(--mid)}.notice span{flex:1}.notice .link{min-height:36px}
+.recap{border-top:1px solid var(--line);margin:0 0 16px;padding:4px 0}.recap summary{color:var(--mid);font-size:14px;min-height:44px;display:flex;align-items:center;cursor:pointer}
+.recap ul,.list{margin:0 0 6px;padding:0;list-style:none}.recap li,.list li{padding:8px 0;border-bottom:1px solid var(--line);font-size:15px;overflow-wrap:anywhere}.recap li:last-child,.list li:last-child{border:0}.recap li b,.list li b{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}.wd{border-radius:10px;padding:8px 0 10px;font-size:13px;min-height:58px;display:flex;flex-direction:column;align-items:center;gap:6px}.wd.today{outline:1px solid var(--acc)}.wd i{display:flex;gap:3px}.wd i u{width:7px;height:7px;border-radius:50%;border:1px solid var(--line)}.wd i u.on{background:var(--acc);border-color:var(--acc)}.wd i u.on.n{background:var(--mid);border-color:var(--mid)}
+.legend{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:12px;color:var(--mid)}.legend u{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);margin-right:5px}.legend u.n{background:var(--mid)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));text-align:center;gap:6px}.stats b{display:block;font:500 26px/1.2 Georgia,serif}.stats span{font-size:12px;color:var(--mid)}
+.memory p{font:italic 19px/1.55 Georgia,serif;margin:0 0 10px;overflow-wrap:anywhere}
+.guide p{margin:0 0 12px;line-height:1.65}.guide p:last-child{margin-bottom:0}.guide .claim{text-align:center;font:500 13px system-ui;letter-spacing:.22em;margin:14px 0}
+.reason{border-top:1px solid var(--line)}.reason:first-of-type{border-top:0}.reason summary{display:flex;gap:12px;align-items:baseline;min-height:52px;padding:12px 0;font-weight:600;font-size:15px;cursor:pointer;list-style:none}.reason summary::-webkit-details-marker{display:none}.reason summary i{font:italic 22px Georgia,serif;color:var(--mid);flex:none;width:18px}.reason p{margin:0 0 16px 30px;color:var(--ink);line-height:1.65}
+.mode-list{display:grid;gap:10px;margin:16px 0}.mode-card{display:block;position:relative;text-align:left;border:1px solid var(--line);border-radius:12px;padding:16px 42px 16px 16px;width:100%;min-height:74px}.mode-card b{font-weight:600;font-size:15px}.mode-card span{display:block;color:var(--mid);font-size:13px;margin-top:4px}.mode-card.selected{border-color:var(--acc);background:var(--surface)}.mode-card.selected:after{content:'✓';position:absolute;right:16px;top:18px;color:var(--acc)}.welcome-lead{font:500 27px/1.25 Georgia,serif;margin:0 0 12px}
+#status{position:fixed;bottom:calc(98px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);max-width:90vw;background:var(--ink);color:white;padding:10px 16px;border-radius:12px;font-size:13px;z-index:20;display:none}#status.show{display:block}#storage-warning{padding:12px;background:var(--surface);font-size:14px}
+@media(max-width:380px){main{padding-left:12px;padding-right:12px}.card{padding:16px}.seg button{font-size:12px;gap:4px}.wd{font-size:12px}}
+</style></head><body>
+<button class="ib" id="dbt" data-a="db" aria-label="Ajustes y respaldo">⋯</button>
+<div id="storage-warning" hidden role="alert"></div><main id="v"></main><nav id="nav" aria-label="Navegación principal"></nav><div id="status" role="status" aria-live="polite"></div>
+<dialog id="dlg" aria-label="Ajustes y respaldo"><div class="modal-head"><h2>A tu manera</h2><button class="ib" data-a="close" aria-label="Cerrar ajustes">×</button></div><div class="modal-body"><div id="pers"></div>
+<h2>Color principal</h2><div class="sws" style="margin:0 0 12px"><button class="sw" style="background:#1e4d6b" data-a="acc" data-i="0" aria-label="Azul"></button><button class="sw" style="background:#b8431f" data-a="acc" data-i="1" aria-label="Terracota"></button><button class="sw" style="background:#2f6b4f" data-a="acc" data-i="2" aria-label="Verde"></button><button class="sw" style="background:#6b3fa0" data-a="acc" data-i="3" aria-label="Violeta"></button><button class="sw" style="background:#806315" data-a="acc" data-i="4" aria-label="Mostaza"></button></div>
+<hr class="hr0"><h2>Tus datos</h2>
+<p class="sub">Lo que escribes se guarda solo en este navegador y en este dispositivo. No se sincroniza. Si borras los datos del navegador, se pierde. En iPhone, añade esta página a tu pantalla de inicio (Compartir → Añadir a pantalla de inicio): así Safari la conserva mejor. Descarga un respaldo de vez en cuando.</p>
+<p class="sub" id="lastBackup"></p>
+<button class="btn" data-a="exp">Descargar respaldo (JSON)</button>
+<label class="btn ghost">Importar respaldo<input type="file" id="imp" accept="application/json,.json" hidden></label>
+<button class="btn ghost" data-a="txt">Descargar mi diario en texto</button>
+<form method="dialog"><button class="btn ghost">Cerrar</button></form></div></dialog>
+<dialog id="welcomeDlg" aria-label="Bienvenida"></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const M=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const D=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+// Frases del diario: 13 frases en orden + el mensaje del día 14.
+const Q=[["Puede que no todos los días sean buenos, pero hay algo bueno en cada día.","Alice Morse Earle"],["Cuando empiezas a tomar nota de las cosas por las que estás agradecido, empiezas a perder de vista aquello que te falta.","Germany Kent"],["Cuando la vida es dulce, da las gracias y celebra; y cuando la vida es amarga, da las gracias y crece.","Shauna Niequist"],["Si ves algo hermoso en alguien, díselo.","Angela Bassett"],["Se necesita muy poco para tener una vida feliz; todo está dentro de ti, en tu manera de pensar.","Marco Aurelio"],["Lo único que todos los tontos tienen en común es que siempre están preparándose para vivir.","Séneca"],["Rechaza la mentalidad pesimista que dice que estamos a merced de fuerzas que escapan a nuestro control.","Ryan Holiday"],["Las personas que no tienen sus hábitos bajo control son las que disfrutan de menos libertad.","James Clear"],["El presente que estás desaprovechando —ya sea la oportunidad de hacer algo arriesgado y divertido, o la llamada a embarcarte en algo terrible pero justo— es lo único que tienes.","Ryan Holiday"],["Eres lo que haces, no lo que dices que eres.","Autor desconocido"],["El futuro pertenece a quienes creen en la belleza de sus sueños.","Eleanor Roosevelt"],["Un corazón agradecido es el principio de la grandeza.","James E. Faust"],["La felicidad no es hacer cosas divertidas. La felicidad es hacer cosas con sentido.","Madam C. J. Walker"]];
+const THANKS=["Gracias por llegar hasta acá :)","Nader Hadweh y Diego Mancilla"];
+const p2=n=>String(n).padStart(2,'0');
+const iso=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const pd=s=>{const a=s.split('-');return new Date(+a[0],a[1]-1,+a[2])};
+const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const wd=d=>(d.getDay()+6)%7, mon=d=>add(d,-wd(d)), td=()=>iso(new Date());
+const diff=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const ym=(s,n)=>{const a=s.split('-'),d=new Date(+a[0],a[1]-1+n,1);return d.getFullYear()+'-'+p2(d.getMonth()+1)};
+const mt=s=>{const a=s.split('-');return M[a[1]-1]+' '+a[0]};
+const dim=s=>{const a=s.split('-');return new Date(+a[0],+a[1],0).getDate()};
+const fd=s=>{const d=pd(s);return d.getDate()+' de '+M[d.getMonth()]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='gratitud1';
+
+/* ---------- Estado y almacenamiento ---------- */
+let S,loadFailure=false;
+const plain=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
+const blank=()=>({d:{},w:{},cfg:{acc:0,hide:{},lines:3,night:18}});
+const strList=v=>v===undefined||((Array.isArray(v)||plain(v))&&Object.values(v).every(x=>x===null||typeof x==='string'));
+function validateState(o){
+ if(!plain(o))throw Error('El archivo no tiene el formato del diario.');
+ const check=(v,depth=0)=>{if(depth>20)throw Error('Archivo demasiado complejo.');if(v&&typeof v==='object')for(const k of Object.keys(v)){if(['__proto__','constructor','prototype'].includes(k))throw Error('Clave no permitida.');check(v[k],depth+1)}};check(o);
+ for(const k of ['d','w','cfg'])if(o[k]!==undefined&&!plain(o[k]))throw Error('Formato incorrecto: '+k);
+ for(const [date,day] of Object.entries(o.d||{})){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!plain(day))throw Error('Día incorrecto.');
+  for(const k of ['g','gd','hl'])if(!strList(day[k]))throw Error('Lista incorrecta.');
+  for(const k of ['af','ap','n'])if(day[k]!==undefined&&typeof day[k]!=='string')throw Error('Texto incorrecto.');
+ }
+ for(const week of Object.values(o.w||{}))if(!plain(week)||!strList(week.r))throw Error('Revisión semanal incorrecta.');
+ if(o.cfg?.hide!==undefined&&!plain(o.cfg.hide))throw Error('Preferencias incorrectas.');
+ return o;
+}
+function normalize(o){const v=Object.assign(blank(),o);v.cfg=Object.assign({acc:0,hide:{},lines:3,night:18},v.cfg);v.cfg.hide=plain(v.cfg.hide)?v.cfg.hide:{};if(![1,3,5].includes(v.cfg.lines))v.cfg.lines=3;if(!Number.isInteger(v.cfg.night)||v.cfg.night<12||v.cfg.night>23)v.cfg.night=18;return v;}
+function readStored(){const raw=localStorage.getItem(KEY);return normalize(raw?validateState(JSON.parse(raw)):blank())}
+try{S=readStored()}catch(e){S=blank();loadFailure=true;$('#storage-warning').hidden=false;$('#storage-warning').textContent='No pudimos leer tus datos. El original permanece intacto. Abre ⋯ para descargarlo o restaurar un respaldo.'}
+const ACC=['#1e4d6b','#b8431f','#2f6b4f','#6b3fa0','#806315'];
+function applyAcc(){document.documentElement.style.setProperty('--acc',ACC[S.cfg.acc]||ACC[0]);document.querySelectorAll('[data-a=acc]').forEach(b=>{const on=+b.dataset.i===(S.cfg.acc||0);b.setAttribute('aria-pressed',on);b.classList.toggle('on',on)})}applyAcc();
+let statusTimer;
+function toast(m){$('#status').textContent=m;$('#status').classList.add('show');clearTimeout(statusTimer);statusTimer=setTimeout(()=>$('#status').classList.remove('show'),3200)}
+let askedPersist=false;
+const save=()=>{if(loadFailure){toast('Guardado bloqueado para proteger tus datos originales. Abre ⋯ para exportarlos o restaurarlos.');return false}
+ try{localStorage.setItem(KEY,JSON.stringify(S));$('#storage-warning').hidden=true;
+  if(!askedPersist){askedPersist=true;try{navigator.storage?.persist?.()}catch(e){}}return true}
+ catch(e){$('#storage-warning').hidden=false;$('#storage-warning').textContent='No se pudo guardar. Descarga un respaldo desde ⋯ antes de cerrar esta página.';return false}};
+const g=(p,d='')=>{const v=p.split('.').reduce((o,k)=>o==null?o:o[k],S);return v??d};
+function setP(p,v){const k=p.split('.');let o=S;for(let i=0;i<k.length-1;i++){const key=k[i];if(o[key]==null)o[key]=/^\d+$/.test(k[i+1])?[]:{};o=o[key]}o[k[k.length-1]]=v;save()}
+
+/* ---------- Contenido y módulos ---------- */
+const MOD={q:'Frase del día',g:'Estoy agradecido por',gd:'Qué haría que hoy sea un gran día',af:'Afirmación de hoy',rr:'Recordatorio para releer',mr:'Ver lo de la mañana al llegar la noche',hl:'Highlights del día',ap:'¿Qué aprendí hoy? / ¿Qué quiero recordar?'};
+const MORNING=['g','gd','af'],NIGHT=['hl','ap'];
+const WQ=['¿Qué momento de esta semana quieres guardar?','¿A quién te gustaría agradecer, y cómo se lo harás saber?','¿Qué aprendiste de algo que no salió como esperabas?','¿Qué te gustaría vivir más la próxima semana?'];
+const PRESETS={
+ full:{label:'Mañana y noche',description:'La experiencia completa: gratitud, intención y afirmación al despertar; highlights y aprendizajes antes de dormir.',modules:['q','g','gd','af','rr','mr','hl','ap']},
+ essential:{label:'Esencial',description:'Lo mínimo para empezar: lo que agradeces por la mañana y tus highlights por la noche.',modules:['q','g','rr','mr','hl']},
+ morning:{label:'Solo por la mañana',description:'Un comienzo consciente: gratitud, intención y afirmación.',modules:['q','g','gd','af']}
+};
+const vis=k=>!S.cfg.hide[k];
+function applyPreset(key){const p=PRESETS[key];if(!p)return;for(const k of Object.keys(MOD))S.cfg.hide[k]=!p.modules.includes(k);S.cfg.preset=key;save()}
+const parts=()=>[MORNING.some(vis)&&'m',NIGHT.some(vis)&&'n','x'].filter(Boolean);
+
+const filled=v=>typeof v==='string'&&v.trim()!=='';
+const items=(date,k)=>Object.values(S.d[date]?.[k]||{}).filter(filled);
+const hasM=date=>{const d=S.d[date];return !!d&&(items(date,'g').length||items(date,'gd').length||filled(d.af))};
+const hasN=date=>{const d=S.d[date];return !!d&&(items(date,'hl').length||filled(d.ap))};
+const hasX=date=>filled(S.d[date]?.n);
+const dayNum=date=>S.cfg.start?diff(S.cfg.start,date)+1:null;
+function quoteFor(date){const n=dayNum(date);if(n===14)return THANKS;if(n>=1&&n<14)return Q[n-1];const i=n>14?(n-15)%Q.length:((Math.floor(pd(date)/864e5)%Q.length)+Q.length)%Q.length;return Q[i]}
+
+/* ---------- Componentes ---------- */
+const U={tab:'d',dd:td(),part:null,wk:iso(mon(new Date())),wt:'s',cm:td().slice(0,7),cd:td(),mem:null,remind:true};
+const lineCount=(path)=>{const v=g(path,{});const last=Object.keys(v).filter(k=>/^\d+$/.test(k)&&filled(v[k])).map(Number);return Math.max(S.cfg.lines,...last.map(x=>x+1))};
+const lines=(path,ph)=>Array.from({length:lineCount(path)},(_,i)=>`<div class="row"><span class="num">${i+1}</span><textarea class="ln" rows="1" data-p="${path}.${i}" aria-label="${esc(ph)} ${i+1}">${esc(g(path+'.'+i))}</textarea></div>`).join('');
+const ta=(p,ph='',r=3,label='')=>`<textarea aria-label="${esc(label||ph||p)}" data-p="${p}" rows="${r}" placeholder="${esc(ph)}">${esc(g(p))}</textarea>`;
+const pageHeader=(t,s='')=>`<div class="top"><div><h1>${t}</h1><div class="sub">${s}</div></div></div>`;
+const IC={sun:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>',moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',note:'<path d="M6 4h9l3 3v13H6z"/><path d="M9 11h6M9 15h6"/>'};
+const svg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+const quoteHTML=date=>{const [t,a]=quoteFor(date),thanks=t===THANKS[0];return `<blockquote class="quote">${thanks?esc(t):'“'+esc(t)+'”'}<footer>— ${esc(a)}</footer></blockquote>`};
+const empty=()=>'<p class="sub" style="text-align:center;margin:40px 0">Tienes todo oculto. Actívalo desde el botón ⋯.</p>';
+function backupNotice(){
+ if(!U.remind||loadFailure)return '';
+ const days=Object.keys(S.d).filter(k=>hasM(k)||hasN(k)||hasX(k)).length;if(days<5)return '';
+ const last=S.cfg.lastExport,snooze=S.cfg.snooze;
+ if(snooze&&diff(snooze,td())<7)return '';
+ if(last&&diff(last,td())<21)return '';
+ return `<div class="notice"><span>${last?'Hace '+diff(last,td())+' días que no guardas un respaldo.':'Aún no guardas un respaldo de tu diario.'}</span><button class="link" data-a="exp">Descargar</button><button class="ib" style="font-size:18px;min-width:36px;min-height:36px" data-a="snooze" aria-label="Recordar más tarde">×</button></div>`;
+}
+
+/* ---------- Vista: Hoy ---------- */
+function vD(){
+ const k=U.dd,t=pd(k),Z='d.'+k+'.',P=parts();
+ const auto=k===td()&&new Date().getHours()>=S.cfg.night?'n':'m';
+ if(!U.part||!P.includes(U.part))U.part=P.includes(auto)?auto:P[0];
+ const n=dayNum(k);
+ const head=`<div class="top" style="margin-top:34px"><button class="ib" data-a="dd" data-n="-1" aria-label="Día anterior">‹</button><div style="text-align:center"><h1>${D[wd(t)]}</h1><div class="sub">${t.getDate()} de ${M[t.getMonth()]} ${t.getFullYear()}${n>=1?' · Día '+n:''}${k!==td()?' · <button data-a="today" style="text-decoration:underline">Hoy</button>':''}</div></div><button class="ib" data-a="dd" data-n="1" aria-label="Día siguiente">›</button></div>`;
+ const label={m:[svg('sun'),'Mañana',hasM(k)],n:[svg('moon'),'Noche',hasN(k)],x:[svg('note'),'Notas',hasX(k)]};
+ const seg=`<div class="seg" role="tablist">${P.map(p=>`<button class="${U.part===p?'on':''}" data-a="part" data-k="${p}" role="tab" aria-selected="${U.part===p}">${label[p][0]}${label[p][1]}${label[p][2]?'<span class="mark" aria-label="con contenido"></span>':''}</button>`).join('')}</div>`;
+ let body='';
+ if(U.part==='x')body='<p class="section-note">Un espacio libre para escribir lo que quieras, sin orden ni reglas.</p>'+ta(Z+'n','Escribe aquí…',12,'Notas adicionales');
+ else if(U.part==='m'){
+  const mods={g:`<div class="card"><label class="q">Estoy agradecido por…</label>${lines(Z+'g','Estoy agradecido por')}</div>`,
+   gd:`<div class="card"><label class="q">¿Qué haría que hoy sea un gran día?</label>${lines(Z+'gd','Qué haría que hoy sea un gran día')}</div>`,
+   af:`<div class="card intent"><h2>Afirmación de hoy</h2>${ta(Z+'af','Hoy elijo…',2,'Afirmación de hoy')}</div>`};
+  body=(vis('q')?quoteHTML(k):'')+MORNING.filter(vis).map(m=>mods[m]).join('')+(vis('rr')&&NIGHT.some(vis)?`<p class="pause"${hasM(k)?'':' hidden'}>Reléelo con calma… y vuelve esta noche.</p>`:'');
+ } else {
+  const recap=vis('mr')&&hasM(k)?`<details class="recap"${hasN(k)?'':' open'}><summary>Lo que escribiste esta mañana</summary><ul>${items(k,'g').map(x=>`<li><b>Agradeciste</b>${esc(x)}</li>`).join('')}${items(k,'gd').map(x=>`<li><b>Para un gran día</b>${esc(x)}</li>`).join('')}${filled(S.d[k].af)?`<li><b>Tu afirmación</b>${esc(S.d[k].af)}</li>`:''}</ul></details>`:'';
+  const mods={hl:`<div class="card night"><label class="q">Highlights del día</label>${lines(Z+'hl','Highlight del día')}</div>`,
+   ap:`<div class="card night"><label class="q">¿Qué aprendí hoy? / ¿Qué quiero recordar de hoy?</label>${ta(Z+'ap','Una idea, un momento, algo que sentiste…',3,'Qué aprendí hoy')}</div>`};
+  body=recap+NIGHT.filter(vis).map(m=>mods[m]).join('');
+ }
+ return head+backupNotice()+seg+(body||empty());
+}
+
+/* ---------- Vista: Semana ---------- */
+function vW(){
+ const k=U.wk,a=pd(k),b=add(a,6),W='w.'+k+'.',f=d=>d.getDate()+' '+M[d.getMonth()].slice(0,3);
+ const head=`<div class="top" style="margin-top:34px"><button class="ib" data-a="wk" data-n="-1" aria-label="Semana anterior">‹</button><div style="text-align:center"><h1>Semana</h1><div class="sub">${f(a)} – ${f(b)}${k!==iso(mon(new Date()))?' · <button data-a="hoyw" style="text-decoration:underline">Esta semana</button>':''}</div></div><button class="ib" data-a="wk" data-n="1" aria-label="Semana siguiente">›</button></div><div class="seg"><button class="${U.wt==='s'?'on':''}" data-a="wt" data-k="s">Resumen</button><button class="${U.wt==='r'?'on':''}" data-a="wt" data-k="r">Revisión</button></div>`;
+ if(U.wt==='r')return head+'<p class="section-note">Unos minutos para mirar la semana completa. Responde solo lo que quieras.</p>'+(WQ.map((q,i)=>vis('w'+i)?`<div class="card"><label class="q">${q}</label>${ta(W+'r.'+i,'',4,q)}</div>`:'').join('')||empty());
+ const days=[...Array(7)].map((_,i)=>iso(add(a,i)));
+ const strip=`<div class="card"><div class="week">${days.map((d,i)=>`<button class="wd${d===td()?' today':''}" data-a="open" data-k="${d}" aria-label="Abrir ${D[i]} ${fd(d)}"><span>${D[i].slice(0,2)}</span><b>${pd(d).getDate()}</b><i><u class="${hasM(d)?'on':''}"></u><u class="n${hasN(d)?' on':''}"></u></i></button>`).join('')}</div><div class="legend"><span><u></u>Mañana</span><span><u class="n"></u>Noche</span></div></div>`;
+ const list=(key,title)=>{const rows=days.flatMap(d=>items(d,key).map(x=>`<li><b>${D[wd(pd(d))]} ${pd(d).getDate()}</b>${esc(x)}</li>`));return rows.length?`<div class="card"><h2>${title}</h2><ul class="list">${rows.join('')}</ul></div>`:''};
+ const content=list('g','Lo que agradeciste')+list('hl','Tus highlights');
+ return head+strip+(content||'<p class="sub" style="text-align:center;margin:28px 0">Lo que escribas cada día aparecerá aquí, reunido en un solo lugar.</p>');
+}
+
+/* ---------- Vista: Recuerdos ---------- */
+function allMemories(){const out=[];for(const date of Object.keys(S.d).sort()){if(date>td())continue;for(const x of items(date,'g'))out.push([date,'Agradeciste',x]);for(const x of items(date,'hl'))out.push([date,'Un highlight',x]);if(filled(S.d[date].ap))out.push([date,'Quisiste recordar',S.d[date].ap])}return out}
+function vC(){
+ const mem=allMemories(),dates=Object.keys(S.d).filter(d=>hasM(d)||hasN(d)||hasX(d));
+ const gCount=Object.keys(S.d).reduce((s,d)=>s+items(d,'g').length,0),hCount=Object.keys(S.d).reduce((s,d)=>s+items(d,'hl').length,0);
+ if(mem.length&&(U.mem===null||U.mem>=mem.length))U.mem=Math.floor(Math.random()*mem.length);
+ const m=U.cm,ar=m.split('-').map(Number),off=wd(new Date(ar[0],ar[1]-1,1)),n=dim(m),rows=Math.ceil((off+n)/7);
+ let gr=D.map(d=>`<div class="sub">${d[0]}</div>`).join('');
+ for(let i=0;i<rows*7;i++){const d=i-off+1;if(d<1||d>n){gr+='<div></div>';continue}
+  const k=m+'-'+p2(d),hm=hasM(k),hn=hasN(k);
+  gr+=`<button class="cd${k===U.cd?' sel':''}${k===td()?' today':''}${hm||hn||hasX(k)?' has':''}" data-a="cd" data-k="${k}" aria-label="${fd(k)}">${d}<span class="dts">${hm?'<u></u>':''}${hn?'<u class="n"></u>':''}</span></button>`}
+ const sel=U.cd,sd=pd(sel);
+ const summary=[...items(sel,'g').map(x=>['Agradeciste',x]),...items(sel,'gd').map(x=>['Para un gran día',x]),...(filled(S.d[sel]?.af)?[['Tu afirmación',S.d[sel].af]]:[]),...items(sel,'hl').map(x=>['Highlight',x]),...(filled(S.d[sel]?.ap)?[['Aprendiste o quisiste recordar',S.d[sel].ap]]:[]),...(hasX(sel)?[['Notas',S.d[sel].n]]:[])];
+ const nav=`<div class="top" style="margin-top:0"><button class="ib" data-a="m" data-n="-1" aria-label="Mes anterior">‹</button><div style="text-align:center"><b style="text-transform:capitalize">${mt(m)}</b>${m!==td().slice(0,7)?`<br><button class="sub" style="text-decoration:underline;min-height:28px" data-a="hoym">Ir a hoy</button>`:''}</div><button class="ib" data-a="m" data-n="1" aria-label="Mes siguiente">›</button></div>`;
+ return pageHeader('Recuerdos','Todo lo bueno que has ido guardando.')
+  +(dates.length?`<div class="card"><div class="stats"><div><b>${dates.length}</b><span>${dates.length===1?'día escrito':'días escritos'}</span></div><div><b>${gCount}</b><span>motivos de gratitud</span></div><div><b>${hCount}</b><span>highlights</span></div></div></div>`:'')
+  +(mem.length?`<div class="card memory"><h2>Un recuerdo</h2><p>${esc(mem[U.mem][2])}</p><div class="row" style="align-items:center;justify-content:space-between"><span class="sub">${mem[U.mem][1]} · ${fd(mem[U.mem][0])}</span><button class="link" data-a="mem">Otro recuerdo</button></div></div>`:'<p class="sub" style="margin:0 0 20px">Con el tiempo, aquí aparecerán tus días escritos y recuerdos al azar de lo que agradeciste.</p>')
+  +nav+`<div class="card"><div class="cal">${gr}</div><div class="legend"><span><u></u>Mañana</span><span><u class="n"></u>Noche</span></div></div>`
+  +`<div class="card"><h2>${D[wd(sd)]} ${sd.getDate()} de ${M[sd.getMonth()]}</h2>${summary.length?`<ul class="list">${summary.map(([l,x])=>`<li><b>${l}</b>${esc(x)}</li>`).join('')}</ul>`:'<p class="sub" style="margin:0 0 8px">Este día está en blanco.</p>'}<button class="btn ghost" data-a="open" data-k="${sel}">${summary.length?'Abrir este día':'Escribir en este día'}</button></div>`;
+}
+
+/* ---------- Vista: Guía ---------- */
+const REASONS=[["Es lo más simple que puedes hacer para ser más feliz","No necesitas experiencia, tiempo libre ni inspiración: solo cinco minutos por la mañana y por la noche. Mover la atención hacia lo bueno es uno de los cambios con mayor impacto en el bienestar, y aquí lo practicas a diario, con una frase que te inspira y una estructura que te guía de principio a fin."],["Se apoya en la ciencia","Durante gran parte del siglo XX, la psicología estudió sobre todo lo que nos hace sufrir. A fines de los noventa, la psicología positiva empezó a preguntarse qué nos hace florecer, y la gratitud aparece una y otra vez entre las prácticas con mejores resultados. Este diario deja la teoría de lado y la convierte en preguntas sencillas que puedes responder cada día."],["Está hecho para quienes nunca han llevado un diario","Si alguna vez quisiste escribir un diario pero la página en blanco, el cansancio o la falta de tiempo te ganaron, este es para ti. Las preguntas ya están hechas: solo tienes que responderlas. No hace falta escribir bonito ni escribir mucho, solo ser honesto contigo."],["Se convierte en el álbum de tus mejores momentos","Con el tiempo, estas páginas guardarán lo que te hizo sonreír, lo que aprendiste y lo que soñabas. Dentro de un año podrás abrir cualquier día y reencontrarte con quien eras. Es como una carta que tu yo de hoy le escribe a tu yo del futuro, contada siempre desde lo bueno."],["Es un compromiso que sí vas a poder cumplir","Muchas veces sabemos qué nos hace bien y, aun así, lo dejamos para mañana. Por eso este diario es breve y siempre igual: el mismo momento, las mismas preguntas, cinco minutos. Esa sencillez es la que convierte la intención en hábito. No se trata de hacerlo perfecto, sino de no soltar el hábito."]];
+function vG(){
+ return pageHeader('Guía','Cinco minutos al día. Eso es todo lo que necesitas para empezar a transformar tu vida.')
+ +`<div class="card guide"><h2>¿Cómo funciona este diario?</h2><p>Seamos honestos desde el principio: este diario no es una pastilla mágica. Tenerlo en tu teléfono no va a cambiar nada por sí solo. Pero hay algo de magia en lo que vas a poner en estas páginas: cinco minutos que, día a día, cambian la forma en que miras tu propia vida.</p></div>`
+ +`<div class="card guide"><h2>Lo que ocurre en tu cerebro</h2><p>Haz una prueba ahora mismo. Durante cinco segundos, mira a tu alrededor y busca todo lo que sea de color azul. Seguramente aparecieron cosas azules que hace un momento ni habías notado. No estaban escondidas: estuvieron ahí todo el tiempo. Lo único que cambió fue dónde pusiste tu atención.</p><p>Detrás de ese pequeño truco está el <em>Sistema de Activación Reticular</em> (SAR), una red de neuronas en la base del cerebro que actúa como un portero: de los miles de estímulos que recibes cada segundo, deja pasar a tu conciencia solo los que considera importantes. Y lo que considera importante lo vas definiendo tú, con aquello en lo que te enfocas una y otra vez.</p><p>Ahí está la clave de este diario. Cada vez que escribes por qué estás agradecido, le enseñas a tu cerebro a buscar lo bueno. Tu vida no cambió; cambió tu filtro. Y cuando miras tu vida desde lo que tienes y no desde lo que te falta, eres simplemente más feliz.</p></div>`
+ +`<div class="card guide"><h2>Cómo usarlo</h2><p><b>Por la mañana</b>, tan pronto como despiertes, completa la parte del día. ¿Te sientes desmotivado? <i>Escribe igual.</i> ¿Vas atrasado al trabajo? <i>Escribe igual.</i> ¿Tienes sueño? <i>Escribe igual.</i> Después reléelo, para empezar la jornada con esas ideas presentes.</p><p><b>Por la noche</b>, antes de dormir, completa la parte nocturna. Da lo mismo cómo haya sido tu día: vas a dormir mejor si escribes que si no lo haces. ¿Tuviste un día largo? <i>Escribe igual.</i> ¿Tienes que madrugar mañana? <i>Escribe igual.</i> ¿No estás de ánimo? <i>Escribe igual.</i> Así de simple.</p><p>La pestaña <b>Hoy</b> se abre en la mañana o en la noche según la hora. Una vez a la semana, la <b>Revisión</b> te ayuda a mirar la semana completa, y en <b>Recuerdos</b> puedes volver a cualquier día.</p></div>`
+ +`<div class="card guide"><h2>La única condición</h2><p>Este diario funciona solo si lo usas con constancia y compromiso. No esperes resultados de un día para otro: su efecto es acumulativo, y cada página que escribes se suma a la anterior.</p><p class="claim">PERO FUNCIONA.</p><p>Y recuerda que el verdadero trabajo ocurre allá afuera, en el mundo real. Sal de tu zona de confort, atrévete, vive la vida con intensidad, y deja que este diario sea tu brújula.</p></div>`
+ +`<h2 class="section-title">5 razones por las que amarás el diario de la gratitud</h2><div class="card" style="padding-top:8px;padding-bottom:8px">${REASONS.map(([t,d],i)=>`<details class="reason"><summary><i>${i+1}</i><span>${t}</span></summary><p>${d}</p></details>`).join('')}</div>`;
+}
+
+/* ---------- Ajustes ---------- */
+function modeCards(action='preset',selected=S.cfg.preset){return `<div class="mode-list">${Object.entries(PRESETS).map(([key,p])=>`<button class="mode-card${key===selected?' selected':''}" data-a="${action}" data-k="${key}" aria-pressed="${key===selected}"><b>${p.label}</b><span>${p.description}</span></button>`).join('')}</div>`}
+const tog=k=>`<label class="tg"><span>${MOD[k]}</span><input type="checkbox" data-a="vis" data-k="${k}"${vis(k)?' checked':''}></label>`;
+function persHTML(){
+ const hours=[...Array(12)].map((_,i)=>12+i);
+ return `<h2>Tu diario, a tu manera</h2><p class="sub">Elige una forma de usarlo o ajusta cada espacio. Ocultar un espacio conserva lo que escribiste.</p>${modeCards()}
+ <details><summary class="link">Ajustar cada espacio</summary><h2 class="pref-title">Por la mañana</h2>${['q','g','gd','af','rr'].map(tog).join('')}<h2 class="pref-title">Por la noche</h2>${['hl','ap','mr'].map(tog).join('')}<h2 class="pref-title">Revisión semanal</h2>${WQ.map((q,i)=>`<label class="tg"><span>${q}</span><input type="checkbox" data-a="vis" data-k="w${i}"${vis('w'+i)?' checked':''}></label>`).join('')}</details>
+ <hr class="hr0"><h2>Ritmo</h2>
+ <div class="setting"><span>Líneas en cada lista</span><div class="seg" style="margin:0;width:150px">${[1,3,5].map(n=>`<button class="${S.cfg.lines===n?'on':''}" data-a="lines" data-k="${n}" aria-pressed="${S.cfg.lines===n}">${n}</button>`).join('')}</div></div>
+ <div class="setting"><label for="nightSel" style="flex:1">La noche empieza a las</label><select id="nightSel" data-a="night">${hours.map(h=>`<option value="${h}"${h===S.cfg.night?' selected':''}>${h}:00</option>`).join('')}</select></div>
+ <div class="setting"><label for="startDate" style="flex:1">Día 1 de tu diario<br><span class="sub">Ordena las frases y numera los días.</span></label><input id="startDate" type="date" value="${esc(S.cfg.start||'')}"></div>
+ <hr class="hr0">`;
+}
+function openSettings(){$('#pers').innerHTML=persHTML();$('#lastBackup').textContent=S.cfg.lastExport?'Último respaldo: '+fd(S.cfg.lastExport)+'.':'Todavía no has descargado un respaldo.';$('#dlg').showModal()}
+function refreshPrefs(){const dialog=$('#dlg'),top=dialog.scrollTop,open=$('#pers details')?.open;$('#pers').innerHTML=persHTML();if($('#pers details'))$('#pers details').open=!!open;R();dialog.scrollTop=top}
+function showWelcome(){if(S.cfg.welcomed||loadFailure)return;$('#welcomeDlg').innerHTML=`<div class="modal-head"><h2>Bienvenida</h2><button class="ib" data-a="welcome" aria-label="Elegir más tarde">×</button></div><div class="modal-body"><p class="welcome-lead">Cinco minutos al día.</p><p class="sub">Unas pocas preguntas al despertar y antes de dormir, para entrenar tu mirada en lo bueno. Elige cómo quieres empezar; puedes cambiarlo después desde ⋯.</p>${modeCards('startpreset','full')}<button class="link" data-a="welcome">Elegir más tarde</button></div>`;$('#welcomeDlg').showModal()}
+function startJourney(){if(!S.cfg.start)S.cfg.start=td();S.cfg.welcomed=true;save()}
+
+/* ---------- Exportar ---------- */
+function download(content,name,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+function exportJSON(){
+ if(loadFailure){download(localStorage.getItem(KEY)||JSON.stringify(S),'diario-gratitud-original-'+td()+'.json','application/json');return}
+ download(JSON.stringify({format:'diario-gratitud',version:1,exportedAt:new Date().toISOString(),data:S},null,2),'diario-gratitud-respaldo-'+td()+'.json','application/json');
+ S.cfg.lastExport=td();save();toast('Respaldo descargado');
+}
+function exportText(){
+ const out=['EL DIARIO DE LA GRATITUD',''];
+ for(const date of Object.keys(S.d).sort()){if(!(hasM(date)||hasN(date)||hasX(date)))continue;const d=S.d[date],t=pd(date);out.push('— '+D[wd(t)]+' '+t.getDate()+' de '+M[t.getMonth()]+' '+t.getFullYear()+' —');
+  const sec=(title,list)=>{if(list.length){out.push(title);list.forEach((x,i)=>out.push('  '+(i+1)+'. '+x))}};
+  sec('Estoy agradecido por:',items(date,'g'));sec('Qué haría que hoy sea un gran día:',items(date,'gd'));if(filled(d.af))out.push('Afirmación: '+d.af);
+  sec('Highlights del día:',items(date,'hl'));if(filled(d.ap))out.push('Qué aprendí / qué quiero recordar: '+d.ap);if(filled(d.n))out.push('Notas: '+d.n);out.push('')}
+ download(out.join('\n'),'mi-diario-de-gratitud-'+td()+'.txt','text/plain;charset=utf-8');
+}
+
+/* ---------- Render ---------- */
+function fit(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
+function R(up){
+ const y=scrollY,openRecap=$('.recap')?.open;
+ $('#v').innerHTML=({g:vG,c:vC,w:vW,d:vD})[U.tab]();
+ if(openRecap!==undefined&&$('.recap')&&!up)$('.recap').open=openRecap;
+ document.querySelectorAll('#nav button').forEach(b=>{b.classList.toggle('on',b.dataset.k===U.tab);b.setAttribute('aria-current',b.dataset.k===U.tab?'page':'false')});
+ document.querySelectorAll('textarea.ln').forEach(fit);
+ scrollTo(0,up?0:y);
+}
+const NI={g:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',c:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',w:'<path d="M4 7h16M4 12h16M4 17h10"/>',d:IC.sun};
+$('#nav').innerHTML=[['g','Guía'],['c','Recuerdos'],['w','Semana'],['d','Hoy']].map(([k,l])=>`<button data-a="go" data-k="${k}"><svg viewBox="0 0 24 24">${NI[k]}</svg>${l}</button>`).join('');
+
+/* ---------- Eventos ---------- */
+document.addEventListener('input',e=>{const t=e.target,p=t.dataset&&t.dataset.p;if(p&&'value' in t){setP(p,t.value);if(t.classList.contains('ln'))fit(t);
+ if(U.tab==='d'){const mark=(part,on)=>{const b=document.querySelector(`[data-a=part][data-k="${part}"]`);if(!b)return;const m=b.querySelector('.mark');if(on&&!m)b.insertAdjacentHTML('beforeend','<span class="mark" aria-label="con contenido"></span>');if(!on&&m)m.remove()};mark('m',hasM(U.dd));const pause=$('.pause');if(pause)pause.hidden=!hasM(U.dd);mark('n',hasN(U.dd));mark('x',hasX(U.dd))}}});
+document.addEventListener('keydown',e=>{const t=e.target;if(e.key==='Enter'&&!e.shiftKey&&t.classList?.contains('ln')&&!e.isComposing){e.preventDefault();const all=[...t.closest('.card').querySelectorAll('textarea.ln')],next=all[all.indexOf(t)+1];if(next)next.focus();else t.blur()}});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.id==='nightSel'){S.cfg.night=+t.value;save();toast('La noche empieza a las '+t.value+':00')}
+ if(t.id==='startDate'&&t.value){S.cfg.start=t.value;save();R();toast('Día 1: '+fd(t.value))}});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');if(!b)return;
+ const a=b.dataset.a,d=b.dataset;
+ if(a==='close'){$('#dlg').close();return}
+ if(a==='db'){openSettings();return}
+ if(a==='welcome'){startJourney();$('#welcomeDlg').close();R();return}
+ if(a==='startpreset'){applyPreset(d.k);startJourney();$('#welcomeDlg').close();U.part=null;R(true);toast(PRESETS[d.k].label+': listo para empezar');return}
+ if(a==='preset'){applyPreset(d.k);refreshPrefs();toast(PRESETS[d.k].label+' activado');return}
+ if(a==='vis'){S.cfg.hide[d.k]=!b.checked;S.cfg.preset=null;save();refreshPrefs();return}
+ if(a==='lines'){S.cfg.lines=+d.k;save();refreshPrefs();return}
+ if(a==='acc'){S.cfg.acc=+d.i;save();applyAcc();return}
+ if(a==='exp'){exportJSON();R();if($('#dlg').open)$('#lastBackup').textContent='Último respaldo: '+fd(td())+'.';return}
+ if(a==='txt'){exportText();return}
+ if(a==='snooze'){S.cfg.snooze=td();save();R();return}
+ if(a==='go'){U.tab=d.k;if(d.k==='d')U.part=null}
+ else if(a==='part')U.part=d.k;
+ else if(a==='dd')U.dd=iso(add(pd(U.dd),+d.n));
+ else if(a==='today'){U.dd=td();U.part=null}
+ else if(a==='open'){U.dd=d.k;U.tab='d';U.part=null}
+ else if(a==='wk')U.wk=iso(add(pd(U.wk),7*d.n));
+ else if(a==='hoyw')U.wk=iso(mon(new Date()));
+ else if(a==='wt')U.wt=d.k;
+ else if(a==='m'){U.cm=ym(U.cm,+d.n);U.cd=U.cm===td().slice(0,7)?td():U.cm+'-01'}
+ else if(a==='hoym'){U.cm=td().slice(0,7);U.cd=td()}
+ else if(a==='cd'){U.cd=d.k;R();return}
+ else if(a==='mem'){const n=allMemories().length;if(n>1){let i;do i=Math.floor(Math.random()*n);while(i===U.mem);U.mem=i}R();return}
+ else return;
+ R(true);
+});
+$('#imp').onchange=async e=>{
+ const f=e.target.files[0];e.target.value='';if(!f)return;
+ try{if(f.size>10*1024*1024)throw Error('El respaldo supera 10 MB.');const json=JSON.parse(await f.text());if(json?.format==='diario-gratitud'&&json.version!==1)throw Error('Versión de respaldo no compatible.');const next=normalize(validateState(json?.format==='diario-gratitud'?json.data:json));
+  if(!confirm('Restaurar reemplazará tu diario y tus preferencias por las del respaldo. Antes descargaremos una copia de lo actual. ¿Continuar?'))return;
+  let oldRaw;try{oldRaw=localStorage.getItem(KEY);if(oldRaw)localStorage.setItem(KEY+'-before-restore',oldRaw);localStorage.setItem(KEY,JSON.stringify(next))}catch(err){throw Error('No hay espacio para una restauración segura. No se cambió la información actual.')}
+  download(oldRaw||JSON.stringify(S),'diario-gratitud-antes-de-restaurar-'+td()+'.json','application/json');
+  S=next;loadFailure=false;applyAcc();save();$('#dlg').close();$('#storage-warning').hidden=true;U.part=null;R(true);toast('Respaldo restaurado. Tu copia anterior se descargó.');
+ }catch(err){alert('No se pudo importar: '+err.message)}
+};
+// Si el diario está abierto en otra pestaña, toma sus cambios en lugar de sobrescribirlos.
+window.addEventListener('storage',e=>{if(e.key!==KEY||loadFailure)return;try{S=readStored();applyAcc();const f=document.activeElement;if(!f||!f.dataset?.p)R()}catch(err){}});
+// Al volver a la app después de horas, "Hoy" se actualiza solo.
+let lastDay=td();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&td()!==lastDay){if(U.dd===lastDay)U.dd=td();lastDay=td();U.part=null;if(!document.activeElement?.dataset?.p)R()}});
+$('#welcomeDlg').addEventListener('cancel',()=>{startJourney()});
+for(const dialog of [$('#dlg')]){let outside=false;const hit=e=>{const r=dialog.getBoundingClientRect();return e.target===dialog&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)};dialog.addEventListener('pointerdown',e=>outside=hit(e));dialog.addEventListener('pointercancel',()=>outside=false);dialog.addEventListener('click',e=>{if(outside&&hit(e))dialog.close();outside=false})}
+R(true);
+showWelcome();
+</script></body></html>
